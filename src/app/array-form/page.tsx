@@ -5,6 +5,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { text } from "stream/consumers"
 import { z } from "zod"
 
 const formSchema = z.object({
@@ -16,6 +17,7 @@ const formSchema = z.object({
   ).refine((options) => options.some(option => option.isSelected), {
     message: "Please select at least one option.",
   }),
+  text: z.string().min(3),
 })
 
 export default function OptionsForm() {
@@ -28,6 +30,7 @@ export default function OptionsForm() {
         { label: "Option 2", isSelected: false },
         { label: "Option 3", isSelected: false }
       ],
+      text: "",
     },
   })
 
@@ -40,7 +43,7 @@ export default function OptionsForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 p-10">
         <FormField
           control={form.control}
           name="options"
@@ -50,7 +53,7 @@ export default function OptionsForm() {
               <FormControl>
                 <>
                 {value.map((option, index) => (
-                  <label key={index} className="flex items-center space-x-2">
+                  <div key={index} className="flex items-center space-x-2 gap-">
                     <Input
                       type="checkbox"
                       checked={option.isSelected}
@@ -59,9 +62,10 @@ export default function OptionsForm() {
                         updatedOptions[index].isSelected = e.target.checked;
                         onChange(updatedOptions);
                       }}
+                      className="h-10 w-10"
                     />
-                    <span>{option.label}</span>
-                  </label>
+                    <label>{option.label}</label>
+                  </div>
                 ))}
                 </>
               </FormControl>
@@ -72,6 +76,18 @@ export default function OptionsForm() {
             </FormItem>
           )}
         />
+        <FormField control={form.control} name="text" render={({field}) => {
+          return (
+            <FormItem>
+              <FormLabel>Text</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormDescription>Enter some text.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )
+        }} />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
