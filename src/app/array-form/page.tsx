@@ -21,7 +21,6 @@ const formSchema = z.object({
 })
 
 export default function OptionsForm() {
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,10 +33,7 @@ export default function OptionsForm() {
     },
   })
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values)
   }
 
